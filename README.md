@@ -23,6 +23,12 @@ Just run the following command on the project root:
 
 To execute the binary in the shell type:
 
-    java -jar ./prime-number-service-ws/target/prime-number-service-ws-0.0.1-SNAPSHOT.jar
+    java -jar ./prime-number-service-ws/target/prime-number-service-ws-0.1.0-SNAPSHOT.jar
 
+## Hit the endpoint
+
+In order to access the service you must hit the endpoint `http://127.0.0.1:9000/primes/{number}` where `number` is the value up to which you want to generate prime numbers. You can also add the query parameter `algorithm` to choose from the set of primer number verification algorithms available:
+
+  * Brute Force: this is the most basic and inefficient algorithm available which has been delivered with version _0.0.1_. Request `http://127.0.0.1:9000/primes/{number}?algorithm=bruteForce` if you want to use this algorithm.
+  * Heuristic: this is slightly better and more efficient than the brute force algorithm and is the default implementations as of version _0.1.0_. available which has been delivered with version 0.0.1. Request `http://127.0.0.1:9000/primes/{number}?algorithm=heuristic` or just `http://127.0.0.1:9000/primes/{number}` if you want to use this algorithm.
 

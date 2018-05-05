@@ -9,12 +9,15 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
 import com.company.prime.service.number.app.PrimeNumberGenerator;
+import com.company.prime.service.number.ws.Algorithms;
 import com.company.prime.service.number.ws.model.ErrorInfo;
 import com.company.prime.service.number.ws.model.PrimeNumberResult;
+import com.company.prime.service.number.ws.service.PrimeNumberGeneratorSupplier;
 
 import io.micrometer.core.annotation.Timed;
 import io.swagger.annotations.Api;
@@ -30,7 +33,7 @@ import io.swagger.annotations.ApiResponses;
 @Timed
 public class PrimeNumberController {
 
-  private @Autowired PrimeNumberGenerator generator;
+  private @Autowired PrimeNumberGeneratorSupplier generatorSupplier;
 
   @ApiOperation("Return all prime numbers up to the given number")
   @ApiResponses({
@@ -38,26 +41,29 @@ public class PrimeNumberController {
       @ApiResponse(code = 400, message = "The given value is not a number or is less than/equal to zero", response = ErrorInfo.class) })
   @GetMapping(path = "/{number}")
   public PrimeNumberResult getPrimes(
-      @PathVariable("number") @ApiParam(value = "Number up to which the service will generate prime numbers", example = "6") int number) {
+      @PathVariable("number") @ApiParam(value = "Number up to which the service will generate prime numbers", required = true, example = "6") int number,
+      @RequestParam(name = "algorithm", defaultValue = Algorithms.HEURISTIC) @ApiParam(value = "Algorithm to use for prime number verification", allowableValues = "bruteForce, heruristic") String algorithm) {
+    PrimeNumberGenerator generator = generatorSupplier.get(algorithm);
     return new PrimeNumberResult(number, generator.primesTill(number));
   }
 
   @ExceptionHandler(IllegalArgumentException.class)
   @ResponseStatus(HttpStatus.BAD_REQUEST)
   public ErrorInfo invalidInput(HttpServletRequest req, IllegalArgumentException e) {
-    return new ErrorInfo(
-        req.getRequestURL()
-            .toString(),
-        e.getMessage());
+    return new ErrorInfo(reqUrl(req), e.getMessage());
   }
 
   @ExceptionHandler(NumberFormatException.class)
   @ResponseStatus(HttpStatus.BAD_REQUEST)
   public ErrorInfo notANumber(HttpServletRequest req, NumberFormatException e) {
-    return new ErrorInfo(
-        req.getRequestURL()
-            .toString(),
-        "Not a number");
+    return new ErrorInfo(reqUrl(req), "Not a number");
+  }
+
+  private String reqUrl(HttpServletRequest req) {
+    String queryParams = req.getQueryString() == null ? "" : "?" + req.getQueryString();
+    return req.getRequestURL()
+        .append(queryParams)
+        .toString();
   }
 
 }

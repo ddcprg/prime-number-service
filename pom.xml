@@ -11,7 +11,7 @@
 
   <groupId>com.company</groupId>
   <artifactId>prime-number-service</artifactId>
-  <version>0.0.1-SNAPSHOT</version>
+  <version>0.1.0-SNAPSHOT</version>
   <packaging>pom</packaging>
   <inceptionYear>2018</inceptionYear>
   <name>Prime Number Service</name>
@@ -33,9 +33,6 @@
 
   <properties>
     <java.version>1.8</java.version>
-    <junit.version>4.12</junit.version>
-    <assertj.version>3.9.1</assertj.version>
-    <mockito.version>2.18.3</mockito.version>
     <jacoco.version>0.8.1</jacoco.version>
     <coveralls-maven-plugin.version>4.3.0</coveralls-maven-plugin.version>
   </properties>
@@ -44,30 +41,6 @@
     <module>prime-number-service-app</module>
     <module>prime-number-service-ws</module>
   </modules>
-
-  <dependencyManagement>
-    <dependencies>
-      <dependency>
-        <groupId>junit</groupId>
-        <artifactId>junit</artifactId>
-        <version>${junit.version}</version>
-        <scope>test</scope>
-      </dependency>
-      <dependency>
-        <groupId>org.assertj</groupId>
-        <artifactId>assertj-core</artifactId>
-        <version>${assertj.version}</version>
-        <scope>test</scope>
-      </dependency>
-      <dependency>
-        <groupId>org.mockito</groupId>
-        <artifactId>mockito-core</artifactId>
-        <version>${mockito.version}</version>
-        <scope>test</scope>
-      </dependency>
-    </dependencies>
-
-  </dependencyManagement>
 
   <build>
     <plugins>

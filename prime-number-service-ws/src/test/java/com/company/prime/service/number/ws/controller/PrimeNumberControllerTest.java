@@ -1,6 +1,7 @@
 package com.company.prime.service.number.ws.controller;
 
 import static org.assertj.core.api.BDDAssertions.then;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.BDDMockito.given;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 
@@ -20,14 +21,17 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import com.company.prime.service.number.app.PrimeNumberGenerator;
+import com.company.prime.service.number.ws.Algorithms;
 import com.company.prime.service.number.ws.model.ErrorInfo;
 import com.company.prime.service.number.ws.model.PrimeNumberResult;
+import com.company.prime.service.number.ws.service.PrimeNumberGeneratorSupplier;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 @RunWith(MockitoJUnitRunner.class)
 public class PrimeNumberControllerTest {
 
   private @Mock PrimeNumberGenerator generator;
+  private @Mock PrimeNumberGeneratorSupplier generatorSupplier;
 
   private @InjectMocks PrimeNumberController primeNumberController;
 
@@ -47,7 +51,8 @@ public class PrimeNumberControllerTest {
   }
 
   @Test
-  public void getPrimeNumbers() throws Exception {
+  public void getPrimeNumbersWithDefaultAlgorithm() throws Exception {
+    given(generatorSupplier.get(Algorithms.DEFAULT)).willReturn(generator);
     given(generator.primesTill(6)).willReturn(Arrays.asList(1, 2, 3, 5));
 
     MockHttpServletResponse response = mvc.perform(get("/primes/6").accept(MediaType.APPLICATION_JSON))
@@ -61,7 +66,55 @@ public class PrimeNumberControllerTest {
   }
 
   @Test
+  public void getPrimeNumbersWithBruteForceAlgorithm() throws Exception {
+    given(generatorSupplier.get(Algorithms.BRUTE_FORCE)).willReturn(generator);
+    given(generator.primesTill(8)).willReturn(Arrays.asList(1, 2, 3, 5, 7));
+
+    MockHttpServletResponse response = mvc
+        .perform(get("/primes/8?algorithm=bruteForce").accept(MediaType.APPLICATION_JSON))
+        .andReturn()
+        .getResponse();
+
+    then(response.getStatus()).isEqualTo(HttpStatus.OK.value());
+    then(response.getContentAsString()).isEqualTo(
+        primeNumberResultSerDe.write(new PrimeNumberResult(8, Arrays.asList(1, 2, 3, 5, 7)))
+            .getJson());
+  }
+
+  @Test
+  public void getPrimeNumbersWithHeuristicAlgorithm() throws Exception {
+    given(generatorSupplier.get(Algorithms.HEURISTIC)).willReturn(generator);
+    given(generator.primesTill(8)).willReturn(Arrays.asList(1, 2, 3, 5, 7));
+
+    MockHttpServletResponse response = mvc
+        .perform(get("/primes/8?algorithm=heuristic").accept(MediaType.APPLICATION_JSON))
+        .andReturn()
+        .getResponse();
+
+    then(response.getStatus()).isEqualTo(HttpStatus.OK.value());
+    then(response.getContentAsString()).isEqualTo(
+        primeNumberResultSerDe.write(new PrimeNumberResult(8, Arrays.asList(1, 2, 3, 5, 7)))
+            .getJson());
+  }
+
+  @Test
+  public void getPrimeNumbersWithUnknownAlgorithm() throws Exception {
+    given(generatorSupplier.get(anyString())).willThrow(new IllegalArgumentException("Unkown algorithm"));
+
+    MockHttpServletResponse response = mvc
+        .perform(get("/primes/6?algorithm=heuristic").accept(MediaType.APPLICATION_JSON))
+        .andReturn()
+        .getResponse();
+
+    then(response.getStatus()).isEqualTo(HttpStatus.BAD_REQUEST.value());
+    then(response.getContentAsString()).isEqualTo(
+        errorInfoSerDe.write(new ErrorInfo("http://localhost/primes/6?algorithm=heuristic", "Unkown algorithm"))
+            .getJson());
+  }
+
+  @Test
   public void getPrimeNumbersForInvalidLimit() throws Exception {
+    given(generatorSupplier.get(Algorithms.DEFAULT)).willReturn(generator);
     given(generator.primesTill(-1)).willThrow(new IllegalArgumentException("Error message"));
 
     MockHttpServletResponse response = mvc.perform(get("/primes/-1").accept(MediaType.APPLICATION_JSON))

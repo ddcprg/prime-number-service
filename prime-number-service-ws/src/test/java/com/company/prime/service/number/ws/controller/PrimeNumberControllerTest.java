@@ -6,13 +6,19 @@ import static org.mockito.BDDMockito.given;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 
 import java.util.Arrays;
+import java.util.List;
 
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.junit.runners.Parameterized;
+import org.junit.runners.Parameterized.Parameter;
+import org.junit.runners.Parameterized.Parameters;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.MockitoJUnit;
+import org.mockito.junit.MockitoRule;
 import org.springframework.boot.test.json.JacksonTester;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -26,9 +32,27 @@ import com.company.prime.service.number.ws.model.ErrorInfo;
 import com.company.prime.service.number.ws.model.PrimeNumberResult;
 import com.company.prime.service.number.ws.service.PrimeNumberGeneratorSupplier;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 
-@RunWith(MockitoJUnitRunner.class)
+@RunWith(Parameterized.class)
 public class PrimeNumberControllerTest {
+
+  @Parameters
+  public static List<Object[]> parameters() {
+    return Arrays.asList(
+        new Object[][] {
+            {
+                new ObjectMapper(),
+                MediaType.APPLICATION_JSON },
+            {
+                new XmlMapper(),
+                MediaType.APPLICATION_XML } });
+  }
+
+  public @Parameter(0) ObjectMapper mapper;
+  public @Parameter(1) MediaType mediaType;
+
+  public @Rule MockitoRule mockito = MockitoJUnit.rule();
 
   private @Mock PrimeNumberGenerator generator;
   private @Mock PrimeNumberGeneratorSupplier generatorSupplier;
@@ -44,18 +68,18 @@ public class PrimeNumberControllerTest {
   @Before
   public void init() {
     // Initialises the JacksonTester
-    JacksonTester.initFields(this, new ObjectMapper());
+    JacksonTester.initFields(this, mapper);
     // MockMvc stand-alone approach
     mvc = MockMvcBuilders.standaloneSetup(primeNumberController)
         .build();
   }
 
   @Test
-  public void getPrimeNumbersWithDefaultAlgorithm() throws Exception {
+  public void givenNumberSixAndDefaultAlgortihmWhenGetThenContentIsValid() throws Exception {
     given(generatorSupplier.get(Algorithms.DEFAULT)).willReturn(generator);
     given(generator.primesTill(6)).willReturn(Arrays.asList(1, 2, 3, 5));
 
-    MockHttpServletResponse response = mvc.perform(get("/primes/6").accept(MediaType.APPLICATION_JSON))
+    MockHttpServletResponse response = mvc.perform(get("/primes/6").accept(mediaType))
         .andReturn()
         .getResponse();
 
@@ -66,12 +90,11 @@ public class PrimeNumberControllerTest {
   }
 
   @Test
-  public void getPrimeNumbersWithBruteForceAlgorithm() throws Exception {
+  public void givenNumberSixAndButeForceAlgortihmWhenGetThenContentIsValid() throws Exception {
     given(generatorSupplier.get(Algorithms.BRUTE_FORCE)).willReturn(generator);
     given(generator.primesTill(8)).willReturn(Arrays.asList(1, 2, 3, 5, 7));
 
-    MockHttpServletResponse response = mvc
-        .perform(get("/primes/8?algorithm=bruteForce").accept(MediaType.APPLICATION_JSON))
+    MockHttpServletResponse response = mvc.perform(get("/primes/8?algorithm=bruteForce").accept(mediaType))
         .andReturn()
         .getResponse();
 
@@ -82,12 +105,11 @@ public class PrimeNumberControllerTest {
   }
 
   @Test
-  public void getPrimeNumbersWithHeuristicAlgorithm() throws Exception {
+  public void givenNumberSixAndHeuristicAlgortihmWhenGetThenContentIsValid() throws Exception {
     given(generatorSupplier.get(Algorithms.HEURISTIC)).willReturn(generator);
     given(generator.primesTill(8)).willReturn(Arrays.asList(1, 2, 3, 5, 7));
 
-    MockHttpServletResponse response = mvc
-        .perform(get("/primes/8?algorithm=heuristic").accept(MediaType.APPLICATION_JSON))
+    MockHttpServletResponse response = mvc.perform(get("/primes/8?algorithm=heuristic").accept(mediaType))
         .andReturn()
         .getResponse();
 
@@ -98,26 +120,25 @@ public class PrimeNumberControllerTest {
   }
 
   @Test
-  public void getPrimeNumbersWithUnknownAlgorithm() throws Exception {
+  public void givenNumberSixAndUnknownAlgortihmWhenGetThenErrorIsReturned() throws Exception {
     given(generatorSupplier.get(anyString())).willThrow(new IllegalArgumentException("Unkown algorithm"));
 
-    MockHttpServletResponse response = mvc
-        .perform(get("/primes/6?algorithm=heuristic").accept(MediaType.APPLICATION_JSON))
+    MockHttpServletResponse response = mvc.perform(get("/primes/6?algorithm=unknown").accept(mediaType))
         .andReturn()
         .getResponse();
 
     then(response.getStatus()).isEqualTo(HttpStatus.BAD_REQUEST.value());
     then(response.getContentAsString()).isEqualTo(
-        errorInfoSerDe.write(new ErrorInfo("http://localhost/primes/6?algorithm=heuristic", "Unkown algorithm"))
+        errorInfoSerDe.write(new ErrorInfo("http://localhost/primes/6?algorithm=unknown", "Unkown algorithm"))
             .getJson());
   }
 
   @Test
-  public void getPrimeNumbersForInvalidLimit() throws Exception {
+  public void givenNegativeNumberAndDefaultAlgortihmWhenGetThenErrorIsReturned() throws Exception {
     given(generatorSupplier.get(Algorithms.DEFAULT)).willReturn(generator);
     given(generator.primesTill(-1)).willThrow(new IllegalArgumentException("Error message"));
 
-    MockHttpServletResponse response = mvc.perform(get("/primes/-1").accept(MediaType.APPLICATION_JSON))
+    MockHttpServletResponse response = mvc.perform(get("/primes/-1").accept(mediaType))
         .andReturn()
         .getResponse();
 
@@ -128,8 +149,8 @@ public class PrimeNumberControllerTest {
   }
 
   @Test
-  public void getPrimeNumberForNotANumber() throws Exception {
-    MockHttpServletResponse response = mvc.perform(get("/primes/a").accept(MediaType.APPLICATION_JSON))
+  public void givenNotANumberAndDefaultAlgortihmWhenGetThenErrorIsReturned() throws Exception {
+    MockHttpServletResponse response = mvc.perform(get("/primes/a").accept(mediaType))
         .andReturn()
         .getResponse();
 

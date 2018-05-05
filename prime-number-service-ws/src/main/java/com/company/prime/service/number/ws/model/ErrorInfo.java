@@ -1,13 +1,19 @@
 package com.company.prime.service.number.ws.model;
 
+import javax.xml.bind.annotation.XmlRootElement;
+
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
+@XmlRootElement
 @ApiModel(description = "Container for errors")
 public class ErrorInfo {
 
   private String url;
   private String message;
+
+  public ErrorInfo() {
+  }
 
   public ErrorInfo(String url, String message) {
     this.url = url;

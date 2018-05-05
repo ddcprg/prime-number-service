@@ -24,5 +24,4 @@ public class PrimeNumberGeneratorSupplier {
       throw new IllegalArgumentException("Prime number generator '" + name + "' not found", e);
     }
   }
-
 }

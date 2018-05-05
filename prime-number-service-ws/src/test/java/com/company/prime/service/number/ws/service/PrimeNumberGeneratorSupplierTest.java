@@ -35,7 +35,8 @@ public class PrimeNumberGeneratorSupplierTest {
   public void generatorNotFound() {
     expectedException.expect(IllegalArgumentException.class);
     expectedException.expectCause(instanceOf(NoSuchBeanDefinitionException.class));
-    when(beanFactory.getBean("name", PrimeNumberGenerator.class)).thenThrow(NoSuchBeanDefinitionException.class);
+    when(beanFactory.getBean("name", PrimeNumberGenerator.class))
+        .thenThrow(NoSuchBeanDefinitionException.class);
     supplier.get("name");
   }
 
@@ -44,5 +45,4 @@ public class PrimeNumberGeneratorSupplierTest {
     when(beanFactory.getBean("name", PrimeNumberGenerator.class)).thenReturn(generator);
     assertThat(supplier.get("name")).isSameAs(generator);
   }
-
 }

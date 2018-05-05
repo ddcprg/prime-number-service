@@ -67,5 +67,4 @@ public class BruteForcePrimeNumberPredicateTest {
   public void tenIsNotPrime() {
     assertThat(predicate.test(10)).isFalse();
   }
-
 }

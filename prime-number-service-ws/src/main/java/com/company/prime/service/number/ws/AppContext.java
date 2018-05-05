@@ -19,5 +19,4 @@ public class AppContext {
   public PrimeNumberGenerator heuristic() {
     return new PrimeNumberGenerator(new HeuristicPrimeNumberPredicate());
   }
-
 }

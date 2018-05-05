@@ -9,10 +9,8 @@ public class HeuristicPrimeNumberPredicate implements PrimeNumberPredicate {
   @Override
   public boolean test(int number) {
     checkArgument(number > 0, "Cannot verify if a number less than or equal to zero is prime");
-    if (number == 1 || number == 2)
-      return true;
-    if (number % 2 == 0)
-      return false;
+    if (number == 1 || number == 2) return true;
+    if (number % 2 == 0) return false;
     for (int i = 3; i * i <= number; i += 2) {
       if (number % i == 0) {
         return false;
@@ -20,5 +18,4 @@ public class HeuristicPrimeNumberPredicate implements PrimeNumberPredicate {
     }
     return true;
   }
-
 }

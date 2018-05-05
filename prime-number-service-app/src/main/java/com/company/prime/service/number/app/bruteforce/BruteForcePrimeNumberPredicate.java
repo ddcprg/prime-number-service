@@ -16,5 +16,4 @@ public class BruteForcePrimeNumberPredicate implements PrimeNumberPredicate {
     }
     return true;
   }
-
 }

@@ -28,9 +28,10 @@ import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 
 @Controller
-@RequestMapping(path = "/primes", produces = {
-    MediaType.APPLICATION_JSON_VALUE,
-    MediaType.APPLICATION_XML_VALUE })
+@RequestMapping(
+  path = "/primes",
+  produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE}
+)
 @Api(description = "Prime number generator")
 @ResponseBody
 @Timed
@@ -42,12 +43,28 @@ public class PrimeNumberController {
 
   @ApiOperation("Return all prime numbers up to the given number")
   @ApiResponses({
-      @ApiResponse(code = 200, message = "Successfully retrieved list of prime numbers"),
-      @ApiResponse(code = 400, message = "The given value is not a number or is less than/equal to zero", response = ErrorInfo.class) })
+    @ApiResponse(code = 200, message = "Successfully retrieved list of prime numbers"),
+    @ApiResponse(
+      code = 400,
+      message = "The given value is not a number or is less than/equal to zero",
+      response = ErrorInfo.class
+    )
+  })
   @GetMapping(path = "/{number}")
   public PrimeNumberResult getPrimes(
-      @PathVariable("number") @ApiParam(value = "Number up to which the service will generate prime numbers", required = true, example = "6") int number,
-      @RequestParam(name = "algorithm", defaultValue = Algorithms.HEURISTIC) @ApiParam(value = "Algorithm to use for prime number verification", allowableValues = ALGORITHMS) String algorithm) {
+      @PathVariable("number")
+          @ApiParam(
+            value = "Number up to which the service will generate prime numbers",
+            required = true,
+            example = "6"
+          )
+          int number,
+      @RequestParam(name = "algorithm", defaultValue = Algorithms.HEURISTIC)
+          @ApiParam(
+            value = "Algorithm to use for prime number verification",
+            allowableValues = ALGORITHMS
+          )
+          String algorithm) {
     PrimeNumberGenerator generator = generatorSupplier.get(algorithm);
     return new PrimeNumberResult(number, generator.primesTill(number));
   }
@@ -66,9 +83,6 @@ public class PrimeNumberController {
 
   private String reqUrl(HttpServletRequest req) {
     String queryParams = req.getQueryString() == null ? "" : "?" + req.getQueryString();
-    return req.getRequestURL()
-        .append(queryParams)
-        .toString();
+    return req.getRequestURL().append(queryParams).toString();
   }
-
 }

@@ -1,5 +1,7 @@
 # Prime Number generator
 
+[![Build Status](https://travis-ci.org/ddcprg/prime-number-service.svg?branch=master)](https://travis-ci.org/ddcprg/prime-number-service) [![Coverage Status](https://coveralls.io/repos/github/ddcprg/prime-number-service/badge.svg?branch=master)](https://coveralls.io/github/ddcprg/prime-number-service?branch=master) ![GitHub license](https://img.shields.io/github/license/ddcprg/prime-number-service.svg)
+
 
 This sample application shows how to write a RESTful service with Spring Boot.
 

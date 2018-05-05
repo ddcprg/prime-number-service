@@ -17,6 +17,13 @@
   <name>Prime Number Service</name>
   <description>Generates all prime between 1 and a given value</description>
 
+  <licenses>
+    <license>
+      <name>Apache License, Version 2.0</name>
+      <url>http://www.apache.org/licenses/LICENSE-2.0</url>
+    </license>
+  </licenses>
+
   <scm>
     <connection>scm:git:git@github.com:ddcprg/prime-number-service.git</connection>
     <developerConnection>scm:git:git@github.com:ddcprg/prime-number-service.git</developerConnection>
@@ -29,6 +36,8 @@
     <junit.version>4.12</junit.version>
     <assertj.version>3.9.1</assertj.version>
     <mockito.version>2.18.3</mockito.version>
+    <jacoco.version>0.8.1</jacoco.version>
+    <coveralls-maven-plugin.version>4.3.0</coveralls-maven-plugin.version>
   </properties>
 
   <modules>
@@ -59,5 +68,45 @@
     </dependencies>
 
   </dependencyManagement>
+
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.jacoco</groupId>
+        <artifactId>jacoco-maven-plugin</artifactId>
+        <version>${jacoco.version}</version>
+        <executions>
+          <execution>
+            <id>jacoco-prepare</id>
+            <goals>
+              <goal>prepare-agent</goal>
+            </goals>
+          </execution>
+          <execution>
+            <id>jacoco-site</id>
+            <phase>package</phase>
+            <goals>
+              <goal>report</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
+  </build>
+
+  <profiles>
+    <profile>
+      <id>travis</id>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.eluder.coveralls</groupId>
+            <artifactId>coveralls-maven-plugin</artifactId>
+            <version>${coveralls-maven-plugin.version}</version>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+  </profiles>
 
 </project>

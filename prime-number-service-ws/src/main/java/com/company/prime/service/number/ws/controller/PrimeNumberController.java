@@ -33,6 +33,8 @@ import io.swagger.annotations.ApiResponses;
 @Timed
 public class PrimeNumberController {
 
+  private static final String ALGORITHMS = Algorithms.HEURISTIC + "," + Algorithms.BRUTE_FORCE;
+
   private @Autowired PrimeNumberGeneratorSupplier generatorSupplier;
 
   @ApiOperation("Return all prime numbers up to the given number")
@@ -42,7 +44,7 @@ public class PrimeNumberController {
   @GetMapping(path = "/{number}")
   public PrimeNumberResult getPrimes(
       @PathVariable("number") @ApiParam(value = "Number up to which the service will generate prime numbers", required = true, example = "6") int number,
-      @RequestParam(name = "algorithm", defaultValue = Algorithms.HEURISTIC) @ApiParam(value = "Algorithm to use for prime number verification", allowableValues = "bruteForce, heruristic") String algorithm) {
+      @RequestParam(name = "algorithm", defaultValue = Algorithms.HEURISTIC) @ApiParam(value = "Algorithm to use for prime number verification", allowableValues = ALGORITHMS) String algorithm) {
     PrimeNumberGenerator generator = generatorSupplier.get(algorithm);
     return new PrimeNumberResult(number, generator.primesTill(number));
   }

@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <parent>
+    <groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-starter-parent</artifactId>
+    <version>2.0.1.RELEASE</version>
+  </parent>
+
+  <groupId>com.company</groupId>
+  <artifactId>prime-number-service</artifactId>
+  <version>0.0.1-SNAPSHOT</version>
+  <packaging>pom</packaging>
+  <inceptionYear>2018</inceptionYear>
+  <name>Prime Number Service</name>
+  <description>Generates all prime between 1 and a given value</description>
+
+  <scm>
+    <connection>scm:git:git@github.com:ddcprg/prime-number-service.git</connection>
+    <developerConnection>scm:git:git@github.com:ddcprg/prime-number-service.git</developerConnection>
+    <url>https://github.com/ddcprg/prime-number-service</url>
+    <tag>HEAD</tag>
+  </scm>
+
+  <properties>
+    <java.version>1.8</java.version>
+    <junit.version>4.12</junit.version>
+    <assertj.version>3.9.1</assertj.version>
+    <mockito.version>2.18.3</mockito.version>
+  </properties>
+
+  <modules>
+    <module>prime-number-service-app</module>
+    <module>prime-number-service-ws</module>
+  </modules>
+
+  <dependencyManagement>
+    <dependencies>
+      <dependency>
+        <groupId>junit</groupId>
+        <artifactId>junit</artifactId>
+        <version>${junit.version}</version>
+        <scope>test</scope>
+      </dependency>
+      <dependency>
+        <groupId>org.assertj</groupId>
+        <artifactId>assertj-core</artifactId>
+        <version>${assertj.version}</version>
+        <scope>test</scope>
+      </dependency>
+      <dependency>
+        <groupId>org.mockito</groupId>
+        <artifactId>mockito-core</artifactId>
+        <version>${mockito.version}</version>
+        <scope>test</scope>
+      </dependency>
+    </dependencies>
+
+  </dependencyManagement>
+
+</project>

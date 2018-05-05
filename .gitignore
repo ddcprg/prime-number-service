@@ -1,0 +1,14 @@
+# Eclipse files
+.classpath
+.settings
+.project
+.springBeans
+
+# Checkstyle, findbugs and other eclipse plugins
+*/.checkstyle
+
+# Jenv configuration
+.java-version
+
+# Maven target folder
+target/

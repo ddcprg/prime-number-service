@@ -29,8 +29,7 @@ public class PrimeNumberGeneratorTest {
   @Test
   public void generateEmptyList() {
     List<Integer> result = generator.primesTill(10);
-    assertThat(result).isNotNull()
-        .isEmpty();
+    assertThat(result).isNotNull().isEmpty();
     for (int i = 1; i <= 10; ++i) {
       verify(predicate).test(i);
     }
@@ -44,10 +43,6 @@ public class PrimeNumberGeneratorTest {
     when(predicate.test(4)).thenReturn(false);
     List<Integer> result = generator.primesTill(4);
     verify(predicate, times(4)).test(anyInt());
-    assertThat(result).contains(1)
-        .contains(2)
-        .contains(3)
-        .doesNotContain(4);
+    assertThat(result).contains(1).contains(2).contains(3).doesNotContain(4);
   }
-
 }

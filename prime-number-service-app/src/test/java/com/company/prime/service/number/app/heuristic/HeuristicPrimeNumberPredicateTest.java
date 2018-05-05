@@ -67,5 +67,4 @@ public class HeuristicPrimeNumberPredicateTest {
   public void tenIsNotPrime() {
     assertThat(predicate.test(10)).isFalse();
   }
-
 }

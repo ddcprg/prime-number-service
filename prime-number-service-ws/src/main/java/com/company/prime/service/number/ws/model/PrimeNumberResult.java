@@ -14,8 +14,7 @@ public class PrimeNumberResult {
   private int initial;
   private List<Integer> primes;
 
-  public PrimeNumberResult() {
-  }
+  public PrimeNumberResult() {}
 
   public PrimeNumberResult(int initial, List<Integer> primes) {
     this.initial = initial;
@@ -39,5 +38,4 @@ public class PrimeNumberResult {
   public void setPrimes(List<Integer> primes) {
     this.primes = primes;
   }
-
 }

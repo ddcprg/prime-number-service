@@ -19,7 +19,8 @@ public class SwaggerConfig {
 
   @Bean
   public Docket api() {
-    return new Docket(DocumentationType.SWAGGER_2).select()
+    return new Docket(DocumentationType.SWAGGER_2)
+        .select()
         .apis(RequestHandlerSelectors.basePackage("com.company.prime.service.number"))
         .paths(PathSelectors.any())
         .build()
@@ -38,5 +39,4 @@ public class SwaggerConfig {
         "http://www.apache.org/licenses/",
         Collections.emptyList());
   }
-
 }

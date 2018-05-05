@@ -33,8 +33,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@TestPropertySource(properties = {
-    "management.port=0" })
+@TestPropertySource(properties = {"management.port=0"})
 public class AppIntegrationTest {
 
   private @LocalServerPort int port;
@@ -46,17 +45,18 @@ public class AppIntegrationTest {
   @Test
   public void shouldReturn200WhenSendingRequestToController() throws Exception {
     @SuppressWarnings("rawtypes")
-    ResponseEntity<Map> entity = this.testRestTemplate
-        .getForEntity("http://localhost:" + this.port + "/primes/4", Map.class);
+    ResponseEntity<Map> entity =
+        this.testRestTemplate.getForEntity(
+            "http://localhost:" + this.port + "/primes/4", Map.class);
     then(entity.getStatusCode()).isEqualTo(HttpStatus.OK);
   }
 
   @Test
   public void shouldReturn200WhenSendingRequestToManagementEndpoint() throws Exception {
     @SuppressWarnings("rawtypes")
-    ResponseEntity<Map> entity = this.testRestTemplate
-        .getForEntity("http://localhost:" + this.mgt + "/actuator/info", Map.class);
+    ResponseEntity<Map> entity =
+        this.testRestTemplate.getForEntity(
+            "http://localhost:" + this.mgt + "/actuator/info", Map.class);
     then(entity.getStatusCode()).isEqualTo(HttpStatus.OK);
   }
-
 }

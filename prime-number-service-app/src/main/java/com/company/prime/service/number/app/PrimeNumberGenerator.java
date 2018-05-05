@@ -16,12 +16,12 @@ public class PrimeNumberGenerator {
 
   public List<Integer> primesTill(int limit) {
     checkArgument(limit > 0, "Parameter limit must be greater than 0");
-    List<Integer> result = IntStream.rangeClosed(1, limit)
-        .parallel()
-        .filter(checker)
-        .boxed()
-        .collect(Collectors.toList());
+    List<Integer> result =
+        IntStream.rangeClosed(1, limit)
+            .parallel()
+            .filter(checker)
+            .boxed()
+            .collect(Collectors.toList());
     return result;
   }
-
 }

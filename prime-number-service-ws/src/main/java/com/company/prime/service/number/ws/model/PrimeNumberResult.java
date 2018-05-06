@@ -1,6 +1,7 @@
 package com.company.prime.service.number.ws.model;
 
 import java.util.List;
+import java.util.Objects;
 
 import javax.xml.bind.annotation.XmlRootElement;
 
@@ -37,5 +38,25 @@ public class PrimeNumberResult {
 
   public void setPrimes(List<Integer> primes) {
     this.primes = primes;
+  }
+
+  @Override
+  public boolean equals(Object obj) {
+    if (this == obj) return true;
+    if (obj == null) return false;
+    if (getClass() != obj.getClass()) return false;
+    PrimeNumberResult other = (PrimeNumberResult) obj;
+    return this.initial == other.initial && Objects.equals(this.primes, other.primes);
+  }
+
+  @Override
+  public String toString() {
+    return new StringBuffer("PrimeNumberResult {")
+        .append("initial: ")
+        .append(initial)
+        .append(", primes: ")
+        .append(primes)
+        .append("}")
+        .toString();
   }
 }

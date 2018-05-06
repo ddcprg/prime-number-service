@@ -15,7 +15,7 @@ public class PrimeNumberGenerator {
   }
 
   public List<Integer> primesTill(int limit) {
-    checkArgument(limit > 0, "Parameter limit must be greater than 0");
+    checkArgument(limit > 0, "Parameter must be greater than 0");
     List<Integer> result =
         IntStream.rangeClosed(1, limit)
             .parallel()

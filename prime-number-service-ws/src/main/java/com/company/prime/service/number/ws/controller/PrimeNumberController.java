@@ -55,8 +55,7 @@ public class PrimeNumberController {
       @PathVariable("number")
           @ApiParam(
             value = "Number up to which the service will generate prime numbers",
-            required = true,
-            example = "6"
+            required = true
           )
           int number,
       @RequestParam(name = "algorithm", defaultValue = Algorithms.HEURISTIC)

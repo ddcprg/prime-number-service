@@ -71,7 +71,7 @@ public class PrimeNumberControllerTest {
   }
 
   @Test
-  public void givenNumberSixAndDefaultAlgortihmWhenGetThenContentIsValid() throws Exception {
+  public void shouldReturnPrimesWhenSendingPositiveNumberAndAlgortihmIsDefault() throws Exception {
     given(generatorSupplier.get(Algorithms.DEFAULT)).willReturn(generator);
     given(generator.primesTill(6)).willReturn(Arrays.asList(1, 2, 3, 5));
 
@@ -87,7 +87,8 @@ public class PrimeNumberControllerTest {
   }
 
   @Test
-  public void givenNumberSixAndButeForceAlgortihmWhenGetThenContentIsValid() throws Exception {
+  public void shouldReturnPrimesWhenSendingPositiveNumberAndAlgortihmIsBruteForce()
+      throws Exception {
     given(generatorSupplier.get(Algorithms.BRUTE_FORCE)).willReturn(generator);
     given(generator.primesTill(8)).willReturn(Arrays.asList(1, 2, 3, 5, 7));
 
@@ -105,7 +106,8 @@ public class PrimeNumberControllerTest {
   }
 
   @Test
-  public void givenNumberSixAndHeuristicAlgortihmWhenGetThenContentIsValid() throws Exception {
+  public void shouldReturnPrimesWhenSendingPositiveNumberAndAlgortihmIsHeuristic()
+      throws Exception {
     given(generatorSupplier.get(Algorithms.HEURISTIC)).willReturn(generator);
     given(generator.primesTill(8)).willReturn(Arrays.asList(1, 2, 3, 5, 7));
 
@@ -123,7 +125,7 @@ public class PrimeNumberControllerTest {
   }
 
   @Test
-  public void givenNumberSixAndUnknownAlgortihmWhenGetThenErrorIsReturned() throws Exception {
+  public void shouldReturnErrorWhenSendingPositiveNumberAndAlgortihmIsUnknown() throws Exception {
     given(generatorSupplier.get(anyString()))
         .willThrow(new IllegalArgumentException("Unkown algorithm"));
 
@@ -141,7 +143,7 @@ public class PrimeNumberControllerTest {
   }
 
   @Test
-  public void givenNegativeNumberAndDefaultAlgortihmWhenGetThenErrorIsReturned() throws Exception {
+  public void shouldReturnErrorWhenSendingNegativeNumberAndAlgortihmIsDefault() throws Exception {
     given(generatorSupplier.get(Algorithms.DEFAULT)).willReturn(generator);
     given(generator.primesTill(-1)).willThrow(new IllegalArgumentException("Error message"));
 
@@ -157,7 +159,7 @@ public class PrimeNumberControllerTest {
   }
 
   @Test
-  public void givenNotANumberAndDefaultAlgortihmWhenGetThenErrorIsReturned() throws Exception {
+  public void shouldReturnErrorWhenSendingNotANumber() throws Exception {
     MockHttpServletResponse response =
         mvc.perform(get("/primes/a").accept(mediaType)).andReturn().getResponse();
 

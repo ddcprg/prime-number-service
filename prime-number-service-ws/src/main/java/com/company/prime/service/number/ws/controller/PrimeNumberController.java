@@ -1,5 +1,7 @@
 package com.company.prime.service.number.ws.controller;
 
+import java.util.Map;
+
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,11 +18,12 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 
 import com.company.prime.service.number.app.PrimeNumberGenerator;
 import com.company.prime.service.number.ws.Algorithms;
+import com.company.prime.service.number.ws.metrics.MetricFactory;
 import com.company.prime.service.number.ws.model.ErrorInfo;
 import com.company.prime.service.number.ws.model.PrimeNumberResult;
 import com.company.prime.service.number.ws.service.PrimeNumberGeneratorSupplier;
+import com.google.common.collect.ImmutableMap;
 
-import io.micrometer.core.annotation.Timed;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -34,12 +37,13 @@ import io.swagger.annotations.ApiResponses;
 )
 @Api(description = "Prime number generator")
 @ResponseBody
-@Timed
 public class PrimeNumberController {
 
   private static final String ALGORITHMS = Algorithms.HEURISTIC + "," + Algorithms.BRUTE_FORCE;
 
   private @Autowired PrimeNumberGeneratorSupplier generatorSupplier;
+
+  private final MetricFactory metricFactory = new MetricFactory(this);
 
   @ApiOperation("Return all prime numbers up to the given number")
   @ApiResponses({
@@ -57,15 +61,28 @@ public class PrimeNumberController {
             value = "Number up to which the service will generate prime numbers",
             required = true
           )
-          int number,
+          final int number,
       @RequestParam(name = "algorithm", defaultValue = Algorithms.HEURISTIC)
           @ApiParam(
             value = "Algorithm to use for prime number verification",
             allowableValues = ALGORITHMS
           )
-          String algorithm) {
-    PrimeNumberGenerator generator = generatorSupplier.get(algorithm);
-    return new PrimeNumberResult(number, generator.primesTill(number));
+          final String algorithm) {
+    try {
+      Map<String, String> tags = ImmutableMap.of("algorithm", algorithm);
+      metricFactory.counter("getPrimes", tags).increment();
+      return metricFactory
+          .timer("getPrimes", tags)
+          .recordCallable(
+              () -> {
+                PrimeNumberGenerator generator = generatorSupplier.get(algorithm);
+                return new PrimeNumberResult(number, generator.primesTill(number));
+              });
+    } catch (RuntimeException e) {
+      throw e;
+    } catch (Exception e) {
+      throw new RuntimeException(e);
+    }
   }
 
   @ExceptionHandler(IllegalArgumentException.class)

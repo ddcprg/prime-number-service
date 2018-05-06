@@ -49,7 +49,7 @@
     </dependency>
 
     <dependency>
-      <groupId>com.company</groupId>
+      <groupId>${project.groupId}</groupId>
       <artifactId>prime-number-service-app</artifactId>
       <version>${project.version}</version>
     </dependency>

@@ -40,6 +40,7 @@
   <modules>
     <module>prime-number-service-app</module>
     <module>prime-number-service-ws</module>
+    <module>prime-number-service-docker</module>
   </modules>
 
   <build>

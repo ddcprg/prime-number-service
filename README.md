@@ -32,3 +32,12 @@ In order to access the service you must hit the endpoint `http://127.0.0.1:9000/
   * Brute Force: this is the most basic and inefficient algorithm available which has been delivered with version _0.0.1_. Request `http://127.0.0.1:9000/primes/{number}?algorithm=bruteForce` if you want to use this algorithm.
   * Heuristic: this is slightly better and more efficient than the brute force algorithm and is the default implementations as of version _0.1.0_. available which has been delivered with version 0.0.1. Request `http://127.0.0.1:9000/primes/{number}?algorithm=heuristic` or just `http://127.0.0.1:9000/primes/{number}` if you want to use this algorithm.
 
+## Docker image
+
+You can build a Docker image by activating the Maven profile `docker`. This profile will build and tag the image, during the Maven `package` phase, and push it, during the Maven `deploy` phase, to the local Docker Registry using the project version to tag the image. Make sure you have Docker installed in your compiling machine.
+
+To run the image issue this command:
+
+    docker run -p 127.0.0.1:$HOST_PORT:9000 --name $CONTAINER_NAME -t company/prime-number-service-docker:0.1.2-SNAPSHOT
+
+This will create a new Docker container with name `$CONTAINER_NAME`which exposes the local port `$HOST_PORT`.

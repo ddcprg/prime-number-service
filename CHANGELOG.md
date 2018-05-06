@@ -1,6 +1,7 @@
 # [0.1.2] 2018-04-06
 ### Added
 * Add prime number caching [#5](https://github.com/ddcprg/prime-number-service/issues/5).
+* Build Docker image [#6](https://github.com/ddcprg/prime-number-service/issues/6).
 
 # [0.1.1] 2018-04-05
 ### Added

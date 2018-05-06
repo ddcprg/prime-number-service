@@ -15,15 +15,15 @@ import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
 @RunWith(MockitoJUnitRunner.class)
-public class PrimeNumberGeneratorTest {
+public class DefaultPrimeNumberGeneratorTest {
 
   private @Mock PrimeNumberPredicate predicate;
 
-  private PrimeNumberGenerator generator;
+  private DefaultPrimeNumberGenerator generator;
 
   @Before
   public void init() {
-    generator = new PrimeNumberGenerator(predicate);
+    generator = new DefaultPrimeNumberGenerator(predicate);
   }
 
   @Test

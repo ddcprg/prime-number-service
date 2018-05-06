@@ -23,7 +23,7 @@ Just run the following command on the project root:
 
 To execute the binary in the shell type:
 
-    java -jar ./prime-number-service-ws/target/prime-number-service-ws-0.1.1-SNAPSHOT.jar
+    java -jar ./prime-number-service-ws/target/prime-number-service-ws-0.1.2-SNAPSHOT.jar
 
 ## Hit the endpoint
 
